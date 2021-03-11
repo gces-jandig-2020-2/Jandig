@@ -10,6 +10,7 @@ from .helpers import handle_upload_image
 from .forms import UploadFileForm, ExhibitForm
 from .models import Exhibit
 from users.models import Artwork, Marker, Object
+from django.views.decorators.http import require_GET
 
 @cache_page(60 * 60)
 def service_worker(request):
@@ -103,3 +104,11 @@ def artwork_preview(request):
         "artworks": Artwork.objects.filter(id = artwork_id)
     }
     return render(request, 'core/exhibit.jinja2', ctx)
+
+@require_GET
+def robots_txt(request):
+    lines = [
+        "User-Agent: *",
+        "Disallow: ",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
